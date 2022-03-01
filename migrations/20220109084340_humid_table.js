@@ -1,5 +1,5 @@
 let up = function(knex) {
-	return knex.schema.createTable('light', (table) => {
+	return knex.schema.createTable('humid', (table) => {
 		table.increments()
 		table.integer('value')
 		table.timestamp('created_at').defaultTo(knex.fn.now())
@@ -8,7 +8,7 @@ let up = function(knex) {
 };
 
 let down = function(knex) {
-	return knex.schema.dropTable('light')
+	return knex.schema.dropTable('humid')
 };
 
 export { up, down }

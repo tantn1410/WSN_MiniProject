@@ -1,41 +1,48 @@
 import mqtt from 'mqtt'
 import { knex } from './index.js'
 const mqttClient = mqtt.connect('mqtt://test.mosquitto.org')
-const topic = "doan2-hust"
+const topic = "WSN_MiniProject_Hust"
 
 export const publish = (data) => {
 	mqttClient.publish(topic, data)
 }
 
 mqttClient.on('connect', () => {
-	console.log("Connecting to broker")
+	console.log("Connecting to broker");
 	mqttClient.subscribe(topic, (err) => {
 		if(err) {
-			throw Error("Cannot subscribe the topic " + topic)
+			throw Error("Cannot subscribe the topic " + topic);
 		} else {
-			console.log("Subscribed to topic " + topic)
+			console.log("Subscribed to topic " + topic);
 		}
-	})
-})
+	});
+	mqttClient.publish(topic, "15.22_30_30");
+});
 
 mqttClient.on('message', (topic, message) => {
-	console.log("Receving messages from topic " + topic + message);
-	message = message.toString()
+	console.log("Receving messages from topic " + topic + ": " + message);
+	message = message.toString();
 	// Todo: Handle logic here
-	if (topic === "doan2-hust") {
+	if (topic === "WSN_MiniProject_Hust") {
 		const receivedData = message.split("_");
-		const lux = Number(receivedData[0])
-		const mode = Number(receivedData[1])
-		knex('light').insert({value: lux})
+		const temp = Number(receivedData[0]);
+		const humid = Number(receivedData[1]);
+		const lux = Number(receivedData[2]);
+		knex('temp').insert({value: temp})
 		.then(()=>{
-			console.log("Inserted to light table: ", lux);
-		})
-		
-		knex('mode').insert({value: mode})
+			console.log("Inserted to temp table: ", temp);
+		});
+
+		knex('humid').insert({value: humid})
 		.then(()=>{
-			console.log("Inserted to mode table: ", mode);
-		})
+			console.log("Inserted to humid table: ", humid);
+		});
+
+		knex('lux').insert({value: lux})
+			.then(()=>{
+				console.log("Inserted to lux table: ", lux);
+		});
 	}
-})
+});
 
 //export default mqttClient
