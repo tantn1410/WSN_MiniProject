@@ -1,0 +1,51 @@
+<script>
+  let lightsData = []
+  const modeChange = (mode) => {
+    let modeElement = document.querySelector("#mode")
+    let nextMode = mode
+    if(nextMode === "Manual") {
+      let buttons = document.querySelectorAll(".btn")
+      for(let button of buttons) {
+        button.classList.add("disabled")
+      }
+    } else if(modeElement.innerHTML === "Manual") {
+      let buttons = document.querySelectorAll(".btn")
+      for(let button of buttons) {
+        button.classList.remove("disabled")
+      }
+    }
+    modeElement.innerHTML = nextMode
+  }
+  const polling = async () => {
+    try {
+      const data = await (await fetch("http://localhost:3000/polling", {method: "GET"})).json()
+      const newLights = []
+      const {lights = [], mode = "Auto"} = data
+      modeChange(mode)
+
+      for(let light of lights) {
+        const {id, value} = light
+        if(lightsData.length && lightsData[lightsData.length - 1][1] >= id) break
+        newLights.push([value, id])
+      }
+      for(let i = newLights.length - 1; i >= 0; i--) {
+        lightChart.data.datasets[0].data.push(newLights[i][0])
+        lightsData.push(newLights[i])
+      }
+      if(lightsData.length > 60) {
+        lightsData = lightsData.slice(lightsData.length - 60, lightsData.length)
+      }
+      while(lightChart.data.datasets[0].data.length > 60) {
+        lightChart.data.datasets[0].data.shift()
+      }
+      lightChart.update()
+      let currentLight = lightsData[lightsData.length - 1]?.[0] || 0
+      document.querySelector("div#light").innerHTML = Math.ceil(Number(currentLight))
+    } catch(err) {
+      console.log(err)
+    } finally {
+      setTimeout(polling, 1000)
+    }
+  }
+  setTimeout(polling, 0)
+</script>

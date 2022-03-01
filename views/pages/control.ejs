@@ -1,0 +1,34 @@
+<script>
+	function vertical_range_handle() {
+		vertical_range = document.querySelector("#vertical_range")
+		vertical_range_value = document.querySelector("#vertical_range_value")
+		vertical_range_value.innerHTML = vertical_range.value
+	}
+
+	function horizontal_range_handle() {
+		horizontal_range = document.querySelector("#horizontal_range")
+		horizontal_range_value = document.querySelector("#horizontal_range_value")
+		horizontal_range_value.innerHTML = horizontal_range.value
+	}
+
+	function up() {
+		fetch("http://localhost:3000/up", {method: "POST"})
+	}
+	function down() {
+		fetch("http://localhost:3000/down", {method: "POST"})
+	}
+	function left() {
+		fetch("http://localhost:3000/left", {method: "POST"})
+	}
+	function right() {
+		fetch("http://localhost:3000/right", {method: "POST"})
+	}
+	function stop() {
+		fetch("http://localhost:3000/stop", {method: "POST"})
+	}
+	function sendAngle() {
+		const vertical = document.querySelector("#vertical_range").value
+		const horizontal = document.querySelector("#horizontal_range").value
+		fetch("http://localhost:3000/angle", {method: "POST", body: JSON.stringify({vertical, horizontal})})
+	}
+</script>
