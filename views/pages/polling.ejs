@@ -1,50 +1,59 @@
 <script>
-  let lightsData = []
-  const modeChange = (mode) => {
-    let modeElement = document.querySelector("#mode")
-    let nextMode = mode
-    if(nextMode === "Manual") {
-      let buttons = document.querySelectorAll(".btn")
-      for(let button of buttons) {
-        button.classList.add("disabled")
-      }
-    } else if(modeElement.innerHTML === "Manual") {
-      let buttons = document.querySelectorAll(".btn")
-      for(let button of buttons) {
-        button.classList.remove("disabled")
-      }
+  let humidsData = []
+  let tempsData = []
+
+  const handleHumids = (humids) => {
+    const newhumids = []
+    for(let humid of humids) {
+      const {id, value} = humid
+      if(humidsData.length && humidsData[humidsData.length - 1][1] >= id) break
+      newhumids.push([value, id])
     }
-    modeElement.innerHTML = nextMode
+    for(let i = newhumids.length - 1; i >= 0; i--) {
+      humidChart.data.datasets[0].data.push(newhumids[i][0])
+      humidsData.push(newhumids[i])
+    }
+    if(humidsData.length > 60) {
+      humidsData = humidsData.slice(humidsData.length - 60, humidsData.length)
+    }
+    while(humidChart.data.datasets[0].data.length > 60) {
+      humidChart.data.datasets[0].data.shift()
+    }
+    humidChart.update()
+    let currenthumid = humidsData[humidsData.length - 1]?.[0] || 0
   }
+
+  const handleTemps = (temps) => {
+    for(let temp of temps) {
+      const {id, value} = temp
+      if(tempsData.length && tempsData[tempsData.length - 1][1] >= id) break
+      newtemps.push([value, id])
+    }
+    for(let i = newtemps.length - 1; i >= 0; i--) {
+      tempChart.data.datasets[1].data.push(newtemps[i][0])
+      tempsData.push(newtemps[i])
+    }
+    if(tempsData.length > 60) {
+      tempsData = tempsData.slice(tempsData.length - 60, tempsData.length)
+    }
+    while(tempChart.data.datasets[0].data.length > 60) {
+      tempChart.data.datasets[0].data.shift()
+    }
+    tempChart.update()
+    let currenttemp = tempsData[tempsData.length - 1]?.[0] || 0
+  }
+
   const polling = async () => {
     try {
       const data = await (await fetch("http://localhost:3000/polling", {method: "GET"})).json()
-      const newLights = []
-      const {lights = [], mode = "Auto"} = data
-      modeChange(mode)
-
-      for(let light of lights) {
-        const {id, value} = light
-        if(lightsData.length && lightsData[lightsData.length - 1][1] >= id) break
-        newLights.push([value, id])
-      }
-      for(let i = newLights.length - 1; i >= 0; i--) {
-        lightChart.data.datasets[0].data.push(newLights[i][0])
-        lightsData.push(newLights[i])
-      }
-      if(lightsData.length > 60) {
-        lightsData = lightsData.slice(lightsData.length - 60, lightsData.length)
-      }
-      while(lightChart.data.datasets[0].data.length > 60) {
-        lightChart.data.datasets[0].data.shift()
-      }
-      lightChart.update()
-      let currentLight = lightsData[lightsData.length - 1]?.[0] || 0
-      document.querySelector("div#light").innerHTML = Math.ceil(Number(currentLight))
+      const {temps, humids, luxs} = data
+      handleTemps(temps)
+      handleHumids(humids)
+      handleLuxs(luxs)
     } catch(err) {
       console.log(err)
     } finally {
-      setTimeout(polling, 1000)
+      setTimeout(polling, 5000)
     }
   }
   setTimeout(polling, 0)

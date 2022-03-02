@@ -1,22 +1,24 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js" integrity="sha512-TW5s0IT/IppJtu76UbysrBH9Hy/5X41OTAbQuffZFU6lQ1rdcLHzpU5BzVvr/YFykoiMYZVWlr/PX1mDcfM9Qg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
-const light = document.getElementById('light');
-const lightChart = new Chart(light, {
+const humid = document.getElementById('humid');
+const humidChart = new Chart(humid, {
     type: 'line',
     data: {
         labels: Array(60).fill(''),
-        datasets: [{
-            label: 'Light Intensity',
-            // data: Array(60).fill(0).map(() => Math.random() * 60),
-            borderColor: [
-                'rgba(255, 99, 71, 1)',
-            ],
-            // fill: true,
-            backgroundColor: [
-                'rgba(255, 99, 71, 1)',
-            ],
-            borderWidth: 1
-        }]
+        datasets: [
+            {
+                label: 'Humid',
+                data: Array(60).fill(0).map(() => Math.random() * 60),
+                borderColor: [
+                'rgba(255, 99, 132, 0.2)',
+                ],
+                // fill: true,
+                backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                ],
+                borderWidth: 1
+            }
+        ]
     },
     options: {
         responsive: true,
@@ -25,7 +27,48 @@ const lightChart = new Chart(light, {
             y: {
                 title: {
                     display: true,
-                    text: 'Light (Lux)',
+                    text: '%',
+                    align: 'end'
+                },
+    },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Time (s)',
+                        align: 'end'
+                    }
+                }
+        }
+    }
+});
+const temp = document.getElementById('temp');
+const tempChart = new Chart(temp, {
+    type: 'line',
+    data: {
+        labels: Array(60).fill(''),
+        datasets: [
+            {
+                label: 'Temperature',
+                data: Array(60).fill(0).map(() => Math.random() * 60),
+                borderColor: [
+                    'rgba(255, 99, 71, 1)',
+                ],
+                // fill: true,
+                backgroundColor: [
+                    'rgba(255, 99, 71, 1)',
+                ],
+                borderWidth: 1
+            }
+        ]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+            y: {
+                title: {
+                    display: true,
+                    text: 'Celcius',
                     align: 'end'
                 },
     },
