@@ -16,7 +16,9 @@ mqttClient.on('connect', () => {
 			console.log("Subscribed to topic " + topic);
 		}
 	});
-	mqttClient.publish(topic, "15.22_30_30");
+	// setInterval(function () {
+	// 	mqttClient.publish(topic, "15.22_30_30");
+	// }, 3000);
 });
 
 mqttClient.on('message', (topic, message) => {
