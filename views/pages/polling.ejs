@@ -29,8 +29,9 @@
       if(tempsData.length && tempsData[tempsData.length - 1][1] >= id) break
       newtemps.push([value, id])
     }
+      console.log(tempChart)
     for(let i = newtemps.length - 1; i >= 0; i--) {
-      tempChart.data.datasets[1].data.push(newtemps[i][0])
+      tempChart.data.datasets[0].data.push(newtemps[i][0])
       tempsData.push(newtemps[i])
     }
     if(tempsData.length > 60) {
@@ -45,7 +46,7 @@
   const polling = async () => {
     try {
       const data = await (await fetch("http://localhost:3000/polling", {method: "GET"})).json()
-      const {temps, humids, luxs} = data
+      const {temps, humids} = data
       handleTemps(temps)
       handleHumids(humids)
     } catch(err) {
