@@ -23,6 +23,7 @@
   }
 
   const handleTemps = (temps) => {
+    const newtemps = []
     for(let temp of temps) {
       const {id, value} = temp
       if(tempsData.length && tempsData[tempsData.length - 1][1] >= id) break
