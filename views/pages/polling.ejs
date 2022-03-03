@@ -20,7 +20,6 @@
       humidChart.data.datasets[0].data.shift()
     }
     humidChart.update()
-    let currenthumid = humidsData[humidsData.length - 1]?.[0] || 0
   }
 
   const handleTemps = (temps) => {
@@ -40,7 +39,6 @@
       tempChart.data.datasets[0].data.shift()
     }
     tempChart.update()
-    let currenttemp = tempsData[tempsData.length - 1]?.[0] || 0
   }
 
   const polling = async () => {
