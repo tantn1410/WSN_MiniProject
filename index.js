@@ -38,11 +38,11 @@ app.get("/polling", async (req, res) => {
        .select("*")
        .limit(50)
        .orderBy("id", "desc");
-  const humids = await knex("temp")
+  const humids = await knex("humid")
       .select("*")
       .limit(50)
       .orderBy("id", "desc");
-  const luxs = await knex("temp")
+  const luxs = await knex("lux")
       .select("*")
       .limit(50)
       .orderBy("id", "desc");

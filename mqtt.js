@@ -30,17 +30,17 @@ mqttClient.on('message', (topic, message) => {
 		const temp = Number(receivedData[0]);
 		const humid = Number(receivedData[1]);
 		const lux = Number(receivedData[2]);
-		knex('temp').insert({value: temp})
+		knex('temp').insert({value: temp != null ? temp : null})
 		.then(()=>{
 			console.log("Inserted to temp table: ", temp);
 		});
 
-		knex('humid').insert({value: humid})
+		knex('humid').insert({value: humid != null ? humid : null})
 		.then(()=>{
 			console.log("Inserted to humid table: ", humid);
 		});
 
-		knex('lux').insert({value: lux})
+		knex('lux').insert({value: lux != null ? lux : null})
 			.then(()=>{
 				console.log("Inserted to lux table: ", lux);
 		});
